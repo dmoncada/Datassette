@@ -1,11 +1,11 @@
 import SwiftUI
 
 struct DatassetteEpisodes: View {
-  @Environment(AppViewModel.self) private var vm
+  @Environment(EpisodeService.self) private var episodes
 
   var body: some View {
     Group {
-      switch vm.state {
+      switch episodes.state {
       case .loading:
         ProgressView()
 
@@ -15,8 +15,8 @@ struct DatassetteEpisodes: View {
       case .success:
         ScrollView {
           LazyVStack(spacing: 0) {
-            ForEach(vm.episodes) { episode in
-              EpisodeRow(episode: episode)
+            ForEach(episodes.episodes) { episode in
+              EpisodeRow(episode)
             }
           }
         }
@@ -28,19 +28,19 @@ struct DatassetteEpisodes: View {
       maxHeight: .infinity
     )
     .task {
-      await vm.loadEpisodes()
+      await episodes.loadEpisodes()
     }
   }
 }
 
 #Preview("Loading") {
   DatassetteEpisodes()
-    .environment(AppViewModel(feedClient: .mock))
+    .environment(EpisodeService(feedClient: .mock))
     .environment(PlaybackService())
 }
 
 #Preview("Error") {
   DatassetteEpisodes()
-    .environment(AppViewModel(feedClient: .failing))
+    .environment(EpisodeService(feedClient: .failing))
     .environment(PlaybackService())
 }

@@ -37,7 +37,7 @@ struct AboutSheet: View {
     NavigationStack {
       AboutView()
         .padding()
-        .font(.themeFont(size: 12))
+        .font(.themeFont(.footnote))
         .navigationToolbar(title: "About")
     }
   }
@@ -47,7 +47,7 @@ struct AboutSheet: View {
   NavigationStack {
     AboutView()
       .padding()
-      .font(.themeFont(size: 12))
+      .font(.themeFont(.footnote))
       .navigationTitle("About")
       .navigationBarTitleDisplayMode(.inline)
   }

@@ -18,7 +18,7 @@ func breakIntoLines(
     count += 1
 
     if count > lineWidth {
-      result.append(AttributedString(text[start..<current]))
+      result.append(AttributedString(text[start ..< current]))
 
       start = current
       count = 0
@@ -27,7 +27,7 @@ func breakIntoLines(
         while start < text.endIndex {
           let nextStart = text.index(afterCharacter: start)
 
-          if !text[start..<nextStart]
+          if !text[start ..< nextStart]
             .characters
             .first!
             .isWhitespace

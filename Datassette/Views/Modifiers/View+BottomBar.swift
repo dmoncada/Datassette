@@ -30,7 +30,7 @@ struct DatassetteBottomBarModifier: ViewModifier {
           }
           .padding()
           .frame(maxWidth: .infinity)
-          .font(.themeFont(size: 18).bold())
+          .font(.themeFont(.body).bold())
           .foregroundStyle(.themePrimary)
           .background(.themeSecondary)
         }

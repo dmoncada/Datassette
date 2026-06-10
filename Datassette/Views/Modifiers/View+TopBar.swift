@@ -18,7 +18,7 @@ struct DatassetteTitleModifier: ViewModifier {
       .toolbar {
         ToolbarItem(placement: .title) {
           DatassetteTitle()
-            .font(.themeFont(size: 12).bold())
+            .font(.themeFont(.subheadline).bold())
             .foregroundStyle(.themePrimary)
             .padding(.vertical)
         }
@@ -42,7 +42,7 @@ extension View {
 
 #Preview("Component") {
   DatassetteTitle()
-    .font(.themeFont(size: 12).bold())
+    .font(.themeFont(.headline).bold())
     .foregroundStyle(.themePrimary)
 }
 

@@ -22,3 +22,10 @@ extension View {
     modifier(NavigationToolbarModifier(title: title))
   }
 }
+
+#Preview {
+  NavigationStack {
+    Text("Hello, world!")
+      .navigationToolbar(title: "Title")
+  }
+}

@@ -5,6 +5,6 @@ struct Episode: Codable, Identifiable, Equatable {
   let title: String
   let publicationDate: Date
   let enclosureURL: URL
-  let duration: TimeInterval?
+  let duration: Duration?
   let description: String?
 }

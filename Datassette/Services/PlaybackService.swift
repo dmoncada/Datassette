@@ -40,6 +40,10 @@ final class PlaybackService {
 
   // MARK: - Public API
 
+  func isCurrent(_ episode: Episode) -> Bool {
+    currentEpisode?.id == episode.id
+  }
+
   func play(_ episode: Episode) {
     //    if currentEpisode?.id == episode.id {
     //      if !isPlaying { togglePlayPause() }
@@ -64,7 +68,8 @@ final class PlaybackService {
 
     client.load(url, savedPosition)
 
-    timeObserverToken = client.addTimeObserver { [weak self] current, duration in
+    timeObserverToken = client.addTimeObserver {
+      [weak self] current, duration in
       guard let self else { return }
       self.currentTime = current
       self.duration = duration
@@ -75,7 +80,7 @@ final class PlaybackService {
     isPlaying = true
 
     client.updateNowPlaying(episode, true, savedPosition, 0)
-    //    startPositionSaveTimer()
+    // startPositionSaveTimer()
   }
 
   func togglePlayPause() {
@@ -90,8 +95,8 @@ final class PlaybackService {
   }
 
   func seek(to time: TimeInterval) {
-    guard let _ = currentEpisode else { return }
-    let target = time.clamped(to: 0...duration)
+    if currentEpisode == nil { return }
+    let target = time.clamped(to: 0 ... duration)
     client.seek(target)
   }
 
@@ -136,11 +141,5 @@ final class PlaybackService {
     }
     //    saveTimer?.invalidate()
     client.tearDown()
-  }
-}
-
-extension Comparable {
-  func clamped(to range: ClosedRange<Self>) -> Self {
-    min(max(self, range.lowerBound), range.upperBound)
   }
 }

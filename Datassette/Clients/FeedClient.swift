@@ -23,8 +23,7 @@ extension FeedClient {
 
           let episodes: [Episode] =
             rss.channel?.items?.compactMap { item -> Episode? in
-              guard
-                let guid = item.guid?.text
+              guard let guid = item.guid?.text
               else { return nil }
 
               guard
@@ -37,7 +36,7 @@ extension FeedClient {
                 title: item.title ?? "Unknown",
                 publicationDate: item.pubDate ?? Date(),
                 enclosureURL: url,
-                duration: item.iTunes?.duration,
+                duration: item.iTunes?.duration.map(Duration.seconds),
                 description: item.description
               )
             } ?? []
@@ -50,7 +49,6 @@ extension FeedClient {
           )
 
         } catch {
-          print(error.localizedDescription)
           logger.error("Error fetching feed: \(error.localizedDescription)")
           throw error
         }
@@ -64,35 +62,29 @@ extension FeedClient {
       description: "Music to help you focus while programming",
       episodes: [
         Episode(
-          id: "66",
-          title: "Episode 66: Conrad Clipper",
+          id: "78",
+          title: "Episode 78: Datassette",
           publicationDate: Date(),
-          enclosureURL: URL(string: "https://example.com/mfp66.mp3")!,
-          duration: 4939,
+          enclosureURL: URL(
+            string: "https://datashat.net/music_for_programming_78-datassette.mp3")!,
+          duration: Duration.seconds(5400),
           description: nil
         ),
         Episode(
-          id: "65",
-          title: "Episode 65: Dev/Null",
-          publicationDate: Calendar.current.date(
-            byAdding: .month,
-            value: -1,
-            to: Date()
-          ) ?? Date(),
-          enclosureURL: URL(string: "https://example.com/mfp65.mp3")!,
-          duration: 5400,
+          id: "77",
+          title: "Episode 77: Phonaut",
+          publicationDate: Date(),
+          enclosureURL: URL(string: "https://datashat.net/music_for_programming_77-phonaut.mp3")!,
+          duration: Duration.seconds(7200),
           description: nil
         ),
         Episode(
-          id: "64",
-          title: "Episode 64: Escape Sequence",
-          publicationDate: Calendar.current.date(
-            byAdding: .month,
-            value: -2,
-            to: Date()
-          ) ?? Date(),
-          enclosureURL: URL(string: "https://example.com/mfp64.mp3")!,
-          duration: 3720,
+          id: "7",
+          title: "Episode 07: Tahlhoff Garten + Untitled",
+          publicationDate: Date(),
+          enclosureURL: URL(
+            string: "https://datashat.net/music_for_programming_7-tahlhoff_garten_and_untitled.mp3")!,
+          duration: Duration.seconds(4019),
           description: nil
         ),
       ],

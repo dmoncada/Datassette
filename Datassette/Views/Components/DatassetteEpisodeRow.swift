@@ -3,15 +3,12 @@ import SwiftUI
 struct EpisodeRow: View {
   let episode: Episode
 
-  //  @Environment(DownloadService.self) private var download
+  init(_ episode: Episode) {
+    self.episode = episode
+  }
+
+  @Environment(EpisodeService.self) private var episodes
   @Environment(PlaybackService.self) private var playback
-
-  @State private var isPopoverPresented = false
-
-  private let options: [PopoverModel] = [
-    .favorite("star"),
-    .download("arrow.down.circle"),
-  ]
 
   var body: some View {
     Button {
@@ -20,28 +17,24 @@ struct EpisodeRow: View {
     } label: {
       HStack(spacing: 0) {
         VStack(alignment: .leading, spacing: 4) {
+          let isFavorite = episodes.isFavorite(episode)
+          let isPlaying = playback.isCurrent(episode)
+
           Text(episode.title.removingPrefix("Episode "))
-            .foregroundStyle(
-              playback.currentEpisode == episode
-                ? .themePurple
-                : .themeGreen
-            )
-            .font(.themeFont(size: 16).bold().italic())
+            .interactiveColors(isPlaying, isFavorite ? .themeYellow : .themeGreen)
+            .font(.themeFont(.headline).bold().italic())
             .lineLimit(1)
 
-          HStack(spacing: 4) {
+          HStack {
             Text(episode.publicationDate, style: .date)
 
             if let duration = episode.duration {
               Text("•")
-              Text(
-                Duration.seconds(duration),
-                format: .time(pattern: .hourMinuteSecond)
-              )
+              Text(duration, format: .time(pattern: .hourMinuteSecond))
             }
           }
           .foregroundStyle(.themeSecondary)
-          .font(.themeFont(size: 12))
+          .font(.themeFont(.subheadline))
         }
         .frame(
           maxWidth: .infinity,
@@ -50,43 +43,34 @@ struct EpisodeRow: View {
 
         // DownloadStateIndicator(state: download.state(for: episode))
 
-        Button("Options", systemImage: "ellipsis") {
-          isPopoverPresented = true
-        }
-        .padding(.leading)
-        .labelStyle(.iconOnly)
-        .foregroundStyle(.themeSecondary)
-        .popover(isPresented: $isPopoverPresented) {
-          popover(options)
-            .presentationCompactAdaptation(.popover)
-        }
+        popover
       }
     }
     .padding(.vertical)
     .frame(maxWidth: .infinity)
   }
 
-  private func popover(_ options: [PopoverModel]) -> some View {
-    VStack {
-      ForEach(options) { option in
-        Button(option.kind.description.capitalized, systemImage: option.icon) {
-          defer { isPopoverPresented = false }
-          handle(option.kind)
-        }
-        .foregroundStyle(.themeSecondary)
-        .font(.themeFont(size: 12).bold())
-        .buttonStyle(.glass)
-      }
-    }
-    .padding()
-  }
+  private var popover: some View {
+    Menu {
+      let isFavorite = episodes.isFavorite(episode)
+      let label = isFavorite ? "Forget" : "Favorite"
+      let image = isFavorite ? "star.fill" : "star"
 
-  private func handle(_ kind: ActionKind) {
-    switch kind {
-    case .favorite: break
-    case .download: break
-    //      download.toggle(episode)
+      Button(label, systemImage: image) {
+        episodes.toggleFavorite(episode)
+      }
+
+      Button("Download", systemImage: "arrow.down.circle") {}
+      Button("Delete", systemImage: "trash", role: .destructive) {}
+
+    } label: {
+      Image(systemName: "ellipsis")
+        .padding(.leading)
+        .padding(.vertical)
+        .foregroundStyle(.themeSecondary)
     }
+    .menuStyle(.borderlessButton)
+    .menuOrder(.fixed)
   }
 }
 
@@ -97,48 +81,23 @@ extension String {
   }
 }
 
-extension EpisodeRow {
-  enum ActionKind: String {
-    case favorite
-    case download
-  }
-
-  struct PopoverModel: Identifiable {
-    let id = UUID()
-    let kind: ActionKind
-    let icon: String
-  }
-}
-
-extension EpisodeRow.ActionKind: CustomStringConvertible {
-  var description: String {
-    rawValue
-  }
-}
-
-extension EpisodeRow.PopoverModel {
-  static func favorite(_ icon: String) -> Self {
-    .init(kind: .favorite, icon: icon)
-  }
-  static func download(_ icon: String) -> Self {
-    .init(kind: .download, icon: icon)
-  }
-}
-
 #Preview {
-  let episode = Episode(
-    id: "78",
-    title: "Episode 78: Datassette",
-    publicationDate: Date(),
-    enclosureURL: .init(
-      string: "https://datashat.net/music_for_programming_78-datassette.mp3"
-    )!,
-    duration: 5400,
-    description: nil
-  )
+  @Previewable @State var episodes = EpisodeService(feedClient: .mock)
 
-  EpisodeRow(episode: episode)
-    .environment(PlaybackService())
-    .background(.themeBackground)
-    .padding(.horizontal)
+  Group {
+    switch episodes.state {
+    case .success:
+      EpisodeRow(episodes.episodes[0])
+        .background(.themeBackground)
+        .padding(.horizontal)
+
+    default:
+      ProgressView()
+    }
+  }
+  .task {
+    await episodes.loadEpisodes()
+  }
+  .environment(episodes)
+  .environment(PlaybackService())
 }

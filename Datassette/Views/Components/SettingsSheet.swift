@@ -7,23 +7,6 @@ struct SettingsSheet: View {
   var body: some View {
     NavigationStack {
       Form {
-        /*
-        Section {
-          Picker("Theme", selection: $preference) {
-            Group {
-              Text("System").tag(ColorSchemePreference.system)
-              Text("Light").tag(ColorSchemePreference.light)
-              Text("Dark").tag(ColorSchemePreference.dark)
-            }
-            .containerBackground(.clear, for: .navigation)
-          }
-          .pickerStyle(.navigationLink)
-
-        } footer: {
-          Text("Controls the app's theme preference.")
-        }
-         */
-        
         Section {
           NavigationLink {
             ThemeSelectionView(selection: $preference)
@@ -47,7 +30,7 @@ struct SettingsSheet: View {
           NavigationLink("About") {
             AboutView()
               .padding()
-              .font(.themeFont(size: 12))
+              .font(.themeFont(.footnote))
               .navigationTitle("About")
           }
         }
@@ -82,14 +65,14 @@ struct ThemeSelectionView: View {
   }
 }
 
-extension SettingsSheet {
-  fileprivate struct Preview: View {
-    @AppStorage("colorSchemePreference")
-    private var preference: ColorSchemePreference = .system
+private struct Preview: View {
+  @AppStorage("colorSchemePreference")
+  private var preference: ColorSchemePreference = .system
 
-    @State var isPresented = false
+  @State var isPresented = false
 
-    var body: some View {
+  var body: some View {
+    VStack {
       Button("Show sheet") {
         isPresented = true
       }
@@ -97,11 +80,11 @@ extension SettingsSheet {
         SettingsSheet()
           .presentationDetents([.medium, .large])
       }
-      .preferredColorScheme(preference.colorScheme)
     }
+    .preferredColorScheme(preference.colorScheme)
   }
 }
 
 #Preview {
-  SettingsSheet.Preview()
+  Preview()
 }

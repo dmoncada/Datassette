@@ -5,7 +5,7 @@ struct DatassetteAppShell: View {
   private var preference: ColorSchemePreference = .system
 
   @State private var router = Router()
-  @State private var episodes = AppViewModel()
+  @State private var episodes = EpisodeService()
   @State private var playback = PlaybackService()
 
   var body: some View {
@@ -18,6 +18,7 @@ struct DatassetteAppShell: View {
     }
     .withSheetDestination($router.sheetItem)
     .preferredColorScheme(preference.colorScheme)
+    .onAppear { try? AudioService.shared.preloadSounds() }
     .environment(router)
     .environment(episodes)
     .environment(playback)

@@ -12,9 +12,8 @@ build:
 		-project Datassette.xcodeproj \
 		-scheme Datassette \
 		-destination 'generic/platform=iOS Simulator' \
-		CODE_SIGN_IDENTITY="" \
-		CODE_SIGNING_REQUIRED=NO \
+		CODE_SIGN_IDENTITY='' \
+		CODE_SIGN_STYLE='Automatic' \
 		| xcbeautify
 
 .PHONY: format build
-
