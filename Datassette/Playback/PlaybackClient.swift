@@ -2,11 +2,13 @@ import AVFoundation
 import Foundation
 import MediaPlayer
 
-private final class PlayerBox: Sendable {
+@MainActor
+private final class PlayerBox {
   var player: AVPlayer?
 }
 
-struct PlaybackClient: Sendable {
+@MainActor
+struct PlaybackClient {
   var load: (_ url: URL, _ startTime: TimeInterval) -> Void
   var play: () -> Void
   var pause: () -> Void

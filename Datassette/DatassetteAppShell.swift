@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct DatassetteAppShell: View {
-  @AppStorage("colorSchemePreference")
+  @AppStorage(.storageKeys.colorScheme)
   private var preference: ColorSchemePreference = .system
 
   @State private var router = Router()
@@ -12,9 +12,9 @@ struct DatassetteAppShell: View {
     NavigationStack {
       DatassetteEpisodes()
         .padding(.horizontal)
-        .background(.themeBackground)
         .withDatassetteTopBar()
         .withDatassetteBottomBar()
+        .background(.themeBackground)
     }
     .withSheetDestination($router.sheetItem)
     .preferredColorScheme(preference.colorScheme)

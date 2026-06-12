@@ -2,6 +2,7 @@ import SwiftUI
 
 struct DatassetteBottomBarModifier: ViewModifier {
   @Environment(Router.self) private var router
+  @Environment(EpisodeService.self) private var episodes
   @Environment(PlaybackService.self) private var playback
 
   func body(content: Content) -> some View {
@@ -11,28 +12,48 @@ struct DatassetteBottomBarModifier: ViewModifier {
           router.sheetItem = .playback
 
         } label: {
-          HStack {
-            Text(playback.currentEpisode?.title ?? "Not playing")
-              .frame(
-                maxWidth: .infinity,
-                alignment: .leading
-              )
+          let current = playback.currentEpisode
+
+          HStack(spacing: 16) {
+            VStack(alignment: .leading) {
+              if let current {
+                Text(current.episodeName)
+                  .lineLimit(1)
+
+                Text(current.episodeNumber)
+                  .font(.themeFont(.subheadline))
+
+              } else {
+                Text("Not Playing")
+              }
+            }
+            .frame(height: 60)
+            .frame(
+              maxWidth: .infinity,
+              alignment: .leading
+            )
 
             Button(
               "Playback",
-              systemImage: playback.isPlaying
+              systemImage:
+                playback.isPlaying
                 ? "pause.fill"
                 : "play.fill"
             ) {
               playback.togglePlayPause()
             }
-            .labelStyle(.iconOnly)
+
+            Button("Fast Forward", systemImage: "forward.fill") {
+              if let current, let next = episodes.getNext(for: current) {
+                playback.play(next)
+              }
+            }
           }
           .padding()
-          .frame(maxWidth: .infinity)
-          .font(.themeFont(.body).bold())
+          .font(.themeFont(.title3).bold())
           .foregroundStyle(.themePrimary)
           .background(.themeSecondary)
+          .labelStyle(.iconOnly)
         }
       }
   }
@@ -44,12 +65,25 @@ extension View {
   }
 }
 
-#Preview {
+#Preview(traits: .modifier(MockData(.loadAndSet))) {
+  @Previewable @Environment(EpisodeService.self) var episodes
+  @Previewable @Environment(PlaybackService.self) var playback
+
+  @Previewable @State var load = false
+
   NavigationStack {
-    Text("Hello, world!")
-      .frame(maxHeight: .infinity)
-      .withDatassetteBottomBar()
+    Button("Toggle view") {
+      if load {
+        playback.play(episodes.episodes[0])
+
+      } else {
+        playback.currentEpisode = nil
+      }
+
+      load.toggle()
+    }
+    .frame(maxHeight: .infinity)
+    .withDatassetteBottomBar()
   }
   .environment(Router())
-  .environment(PlaybackService())
 }

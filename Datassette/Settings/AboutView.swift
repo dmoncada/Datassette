@@ -54,12 +54,7 @@ struct AboutSheet: View {
 }
 
 #Preview("Sheet") {
-  @Previewable @State var isPresented = false
-
-  Button("Show sheet") {
-    isPresented = true
-  }
-  .sheet(isPresented: $isPresented) {
+  PreviewSheetWrapper {
     AboutSheet()
   }
 }

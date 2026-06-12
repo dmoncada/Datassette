@@ -12,6 +12,25 @@ final class EpisodeService {
   private(set) var state: LoadState = .loading
   private(set) var episodes: [Episode] = []
 
+  var searchText = ""
+  var filter: EpisodeFilter = .all
+
+  var filteredEpisodes: [Episode] {
+    var filtered = episodes
+
+    if filter == .favorites {
+      filtered = filtered.filter { favorites.contains($0.id) }
+    }
+
+    if searchText.count > 0 {
+      filtered = filtered.filter {
+        $0.title.localizedStandardContains(searchText)
+      }
+    }
+
+    return filtered
+  }
+
   private(set) var favorites: Set<Episode.ID> = [] {
     didSet {
       if oldValue != favorites {
@@ -62,8 +81,9 @@ final class EpisodeService {
     }
   }
 
-  func getNext(for episode: Episode) -> Episode? {
+  func getNext(for episode: Episode?) -> Episode? {
     guard
+      let episode,
       let index = episodes.firstIndex(of: episode),
       index < episodes.count - 1
     else { return nil }
@@ -71,8 +91,9 @@ final class EpisodeService {
     return episodes[index + 1]
   }
 
-  func getPrev(for episode: Episode) -> Episode? {
+  func getPrev(for episode: Episode?) -> Episode? {
     guard
+      let episode,
       let index = episodes.firstIndex(of: episode),
       index > 0
     else { return nil }

@@ -10,6 +10,7 @@
 		DC0C20CC2FCB4BE800A618E8 /* .editorconfig in Resources */ = {isa = PBXBuildFile; fileRef = DC0C20CB2FCB4BE800A618E8 /* .editorconfig */; };
 		DC794E982FBBD13400EA475F /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = DC794E972FBBD13400EA475F /* FeedKit */; };
 		DC794E9A2FBBD13400EA475F /* XMLKit in Frameworks */ = {isa = PBXBuildFile; productRef = DC794E992FBBD13400EA475F /* XMLKit */; };
+		DCC596802FD92DBC0078F41C /* .swift-format in Resources */ = {isa = PBXBuildFile; fileRef = DCC5967F2FD92DBC0078F41C /* .swift-format */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +36,7 @@
 		DC794E6A2FBBCDE200EA475F /* Datassette.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Datassette.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC794E792FBBCDE600EA475F /* DatassetteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DatassetteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC794E832FBBCDE600EA475F /* DatassetteUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DatassetteUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCC5967F2FD92DBC0078F41C /* .swift-format */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".swift-format"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -98,8 +100,9 @@
 		DC794E612FBBCDE200EA475F = {
 			isa = PBXGroup;
 			children = (
-				DC69DAF52FD4EBFB00790EAC /* Makefile */,
 				DC0C20CB2FCB4BE800A618E8 /* .editorconfig */,
+				DCC5967F2FD92DBC0078F41C /* .swift-format */,
+				DC69DAF52FD4EBFB00790EAC /* Makefile */,
 				DC794E6C2FBBCDE200EA475F /* Datassette */,
 				DC794E7C2FBBCDE600EA475F /* DatassetteTests */,
 				DC794E862FBBCDE600EA475F /* DatassetteUITests */,
@@ -251,6 +254,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC0C20CC2FCB4BE800A618E8 /* .editorconfig in Resources */,
+				DCC596802FD92DBC0078F41C /* .swift-format in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

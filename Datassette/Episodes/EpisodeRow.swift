@@ -21,7 +21,8 @@ struct EpisodeRow: View {
           let isPlaying = playback.isCurrent(episode)
 
           Text(episode.title.removingPrefix("Episode "))
-            .interactiveColors(isPlaying, isFavorite ? .themeYellow : .themeGreen)
+            .datassetteStyle(isPlaying)
+            .tint(isFavorite ? .themeYellow : .themeGreen)
             .font(.themeFont(.headline).bold().italic())
             .lineLimit(1)
 
@@ -61,7 +62,7 @@ struct EpisodeRow: View {
       }
 
       Button("Download", systemImage: "arrow.down.circle") {}
-      Button("Delete", systemImage: "trash", role: .destructive) {}
+        .disabled(true)
 
     } label: {
       Image(systemName: "ellipsis")
@@ -74,15 +75,8 @@ struct EpisodeRow: View {
   }
 }
 
-extension String {
-  func removingPrefix(_ prefix: String) -> String {
-    guard hasPrefix(prefix) else { return self }
-    return String(dropFirst(prefix.count))
-  }
-}
-
-#Preview {
-  @Previewable @State var episodes = EpisodeService(feedClient: .mock)
+#Preview(traits: .modifier(MockData(.load))) {
+  @Previewable @Environment(EpisodeService.self) var episodes
 
   Group {
     switch episodes.state {
@@ -95,9 +89,4 @@ extension String {
       ProgressView()
     }
   }
-  .task {
-    await episodes.loadEpisodes()
-  }
-  .environment(episodes)
-  .environment(PlaybackService())
 }

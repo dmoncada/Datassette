@@ -50,18 +50,14 @@ extension PlatformFont.TextStyle {
 }
 
 extension Font {
-  static func custom(_ name: String, _ textStyle: Font.TextStyle) -> Font {
-    let baseSize: CGFloat
-
+  static func baseSize(for textStyle: Font.TextStyle) -> CGFloat {
     #if canImport(AppKit)
-      baseSize =
-        NSFontDescriptor
+      NSFontDescriptor
         .preferredFontDescriptor(forTextStyle: .init(textStyle))
         .pointSize
 
     #elseif canImport(UIKit) && !os(watchOS)
-      baseSize =
-        UIFontDescriptor
+      UIFontDescriptor
         .preferredFontDescriptor(
           withTextStyle: .init(textStyle),
           compatibleWith: UITraitCollection(
@@ -71,13 +67,14 @@ extension Font {
         .pointSize
 
     #else
-      baseSize =
-        UIFontDescriptor
+      UIFontDescriptor
         .preferredFontDescriptor(withTextStyle: .init(textStyle))
         .pointSize
     #endif
+  }
 
-    return .custom(name, size: baseSize, relativeTo: textStyle)
+  static func custom(_ name: String, _ textStyle: Font.TextStyle) -> Font {
+    .custom(name, size: baseSize(for: textStyle), relativeTo: textStyle)
   }
 }
 

@@ -1,11 +1,7 @@
 import SwiftUI
 
 struct DatassetteHeader: View {
-  private let width: Int
-
-  init(charsPerLine: Int = 32) {
-    self.width = charsPerLine
-  }
+  var width: Int = 32
 
   @AttributedStringBuilder
   var builder: AttributedString {
@@ -30,18 +26,39 @@ struct DatassetteHeader: View {
   }
 
   var body: some View {
-    let wrapped = breakIntoLines(builder, lineWidth: width)
-
-    VStack(alignment: .leading) {
-      ForEach(wrapped.indices, id: \.self) { i in
-        Text(wrapped[i])
+    if width > 0 {
+      VStack(alignment: .leading) {
+        ForEach(builder.breakLine(width), id: \.self) { line in
+          Text(line)
+        }
       }
+
+    } else {
+      Text(builder)
     }
   }
 }
 
 #Preview {
-  DatassetteHeader()
+  @Previewable @State var isDark = true
+
+  VStack {
+    Group {
+      DatassetteHeader()
+
+      ScrollView(.horizontal) {
+        DatassetteHeader(width: 0)
+          .frame(height: 50)
+      }
+    }
     .font(.themeFont(size: 12).bold())
     .foregroundStyle(.themePrimary)
+
+    Button("Toggle scheme") {
+      isDark.toggle()
+    }
+  }
+  .padding()
+  .background(.themeBackground)
+  .preferredColorScheme(isDark ? .dark : .light)
 }
