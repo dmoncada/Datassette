@@ -26,7 +26,7 @@ struct MockData: PreviewModifier {
           await episodes.loadEpisodes()
           playback.play(episodes.episodes[0])
           playback.togglePlayPause()
-          playback.seek(to: 0)
+          playback.seek(to: .zero)
 
         default:
           break

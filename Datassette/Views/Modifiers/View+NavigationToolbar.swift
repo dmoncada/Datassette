@@ -8,7 +8,9 @@ struct NavigationToolbarModifier: ViewModifier {
   func body(content: Content) -> some View {
     content
       .navigationTitle(title)
-      .navigationBarTitleDisplayMode(.inline)
+      #if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+      #endif
       .toolbar {
         Button(role: .close) {
           dismiss()

@@ -2,11 +2,9 @@ import SwiftUI
 
 #if canImport(AppKit)
   typealias PlatformFont = NSFont
-  typealias FontDescriptor = NSFontDescriptor
-#elseif canImport(UIKit)
+  #elseif canImport(UIKit)
   typealias PlatformFont = UIFont
-  typealias FontDescriptor = UIFontDescriptor
-#endif
+  #endif
 
 extension PlatformFont.TextStyle {
   init(_ textStyle: Font.TextStyle) {
@@ -87,3 +85,90 @@ extension Font {
     .custom("IBMPlexMono", textStyle)
   }
 }
+
+#if DEBUG
+  private func installedFontNames(matching query: String) -> [String] {
+    #if canImport(AppKit)
+      NSFontManager.shared.availableFonts
+        .filter { $0.localizedStandardContains(query) }
+        .sorted()
+    #elseif canImport(UIKit)
+      PlatformFont.familyNames
+        .flatMap { PlatformFont.fontNames(forFamilyName: $0) }
+        .filter { $0.localizedStandardContains(query) }
+        .sorted()
+    #endif
+  }
+
+  private struct InstalledIbmPlexFontsList: View {
+    let fontNames = installedFontNames(matching: "IBMPlex")
+
+    var body: some View {
+      List(fontNames, id: \.self) { name in
+        Text(name)
+          .font(.custom(name, size: 40, relativeTo: .largeTitle))
+          .minimumScaleFactor(0.5)
+          .scaledToFit()
+      }
+    }
+  }
+
+  private struct IbmPlexWeightSpecimen: View {
+    let fontNames = installedFontNames(matching: "IBMPlex")
+
+    var body: some View {
+      List(fontNames, id: \.self) { name in
+        VStack(alignment: .leading) {
+          Text("hello")
+            .font(.custom(name, size: 40, relativeTo: .largeTitle))
+          Text(name)
+            .font(.caption)
+            .foregroundStyle(.secondary)
+        }
+      }
+    }
+  }
+
+  private struct IbmPlexThemeFontMatrix: View {
+    private let weights: [(name: String, weight: Font.Weight)] = [
+      ("ultraLight", .ultraLight),
+      ("thin", .thin),
+      ("light", .light),
+      ("regular", .regular),
+      ("medium", .medium),
+      ("semibold", .semibold),
+      ("bold", .bold),
+      ("heavy", .heavy),
+      ("black", .black),
+    ]
+
+    var body: some View {
+      List(weights, id: \.name) { (name, weight) in
+        VStack(alignment: .leading) {
+          HStack {
+            Text("hello")
+              .font(.themeFont(.largeTitle).weight(weight))
+            Text("hello")
+              .font(.themeFont(.largeTitle).weight(weight).italic())
+          }
+
+          Text(name)
+            .font(.caption)
+            .foregroundStyle(.secondary)
+        }
+      }
+    }
+  }
+
+  #Preview("Installed") {
+    InstalledIbmPlexFontsList()
+  }
+
+  #Preview("Weights & Styles") {
+    IbmPlexWeightSpecimen()
+  }
+
+  #Preview("Extension") {
+    IbmPlexThemeFontMatrix()
+  }
+#endif

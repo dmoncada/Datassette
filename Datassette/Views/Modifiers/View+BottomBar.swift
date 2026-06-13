@@ -15,10 +15,14 @@ struct DatassetteBottomBarModifier: ViewModifier {
           let current = playback.currentEpisode
 
           HStack(spacing: 16) {
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 0) {
               if let current {
-                Text(current.episodeName)
-                  .lineLimit(1)
+                VStack(alignment: .center) {
+                  Text(current.episodeName)
+                    .minimumScaleFactor(0.5)
+                    .scaledToFit()
+                }
+                .frame(height: 32)
 
                 Text(current.episodeNumber)
                   .font(.themeFont(.subheadline))

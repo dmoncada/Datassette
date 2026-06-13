@@ -49,7 +49,6 @@ struct AboutSheet: View {
       .padding()
       .font(.themeFont(.footnote))
       .navigationTitle("About")
-      .navigationBarTitleDisplayMode(.inline)
   }
 }
 

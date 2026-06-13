@@ -16,7 +16,7 @@ struct DatassetteTitleModifier: ViewModifier {
     content
       .toolbarTitleDisplayMode(.inline)
       .toolbar {
-        ToolbarItem(placement: .title) {
+        ToolbarItem(placement: .principal) {
           DatassetteTitle()
             .font(.themeFont(.subheadline).bold())
             .foregroundStyle(.themePrimary)
@@ -49,6 +49,10 @@ extension View {
 #Preview("Modifier") {
   NavigationStack {
     Text("Hello, world!")
+      .frame(
+        maxWidth: .infinity,
+        maxHeight: .infinity
+      )
       .withDatassetteTopBar()
   }
   .environment(Router())

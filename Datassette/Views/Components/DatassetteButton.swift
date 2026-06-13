@@ -10,7 +10,14 @@ struct DatassetteButton: View {
     _ label: ControlLabels,
     action: @escaping () -> Void
   ) {
-    self.label = label.rawValue
+    self.init(label.rawValue, action: action)
+  }
+
+  init(
+    _ label: String,
+    action: @escaping () -> Void
+  ) {
+    self.label = label
     self.action = action
   }
 
@@ -25,4 +32,18 @@ struct DatassetteButton: View {
       .buttonStyle(.datassetteButton)
       .tapSound()
   }
+}
+
+#Preview {
+  VStack(spacing: 12) {
+    DatassetteButton(.prev) {}
+      .tint(.themeGreen)
+    DatassetteButton(.play) {}
+      .tint(.themeYellow)
+    DatassetteButton(.next) {}
+      .disabled(true)
+  }
+  .padding()
+  .font(.themeFont(.body))
+  .background(.themeBackground)
 }

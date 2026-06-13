@@ -33,14 +33,16 @@ struct DatassetteEpisodes: View {
   }
 }
 
-#Preview("Loading") {
+#Preview("Loading", traits: .modifier(MockData())) {
   DatassetteEpisodes()
-    .environment(EpisodeService(feedClient: .mock))
-    .environment(PlaybackService())
+    .padding()
+    .background(.themeBackground)
 }
 
 #Preview("Error") {
   DatassetteEpisodes()
+    .padding()
+    .background(.themeBackground)
     .environment(EpisodeService(feedClient: .failing))
-    .environment(PlaybackService())
+    .environment(PlaybackService(client: .mock))
 }
