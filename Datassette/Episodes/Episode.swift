@@ -1,6 +1,6 @@
 import Foundation
 
-struct Episode: Codable, Identifiable, Equatable {
+nonisolated struct Episode: Codable, Identifiable, Equatable {
   let id: String
   let title: String
   let publicationDate: Date

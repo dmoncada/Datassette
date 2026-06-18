@@ -1,5 +1,15 @@
+SWIFT := "/usr/bin/swift"
+
+check:
+	@$(SWIFT) format \
+		lint \
+		--strict \
+		--parallel \
+		--recursive \
+		./Datassette
+
 format:
-	@swift format \
+	@$(SWIFT) format \
 		--ignore-unparsable-files \
 		--in-place \
 		--parallel \
@@ -9,11 +19,11 @@ format:
 build:
 	@echo "Building Datassette for iOS..."
 	@xcodebuild build \
+		CODE_SIGN_IDENTITY='' \
+		CODE_SIGN_STYLE='Automatic' \
 		-project Datassette.xcodeproj \
 		-scheme Datassette \
 		-destination 'generic/platform=iOS Simulator' \
-		CODE_SIGN_IDENTITY='' \
-		CODE_SIGN_STYLE='Automatic' \
 		| xcbeautify
 
 .PHONY: format build

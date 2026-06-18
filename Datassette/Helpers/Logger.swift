@@ -4,10 +4,6 @@ extension Logger {
   enum Datassette {
     struct Category: RawRepresentable, Hashable {
       let rawValue: String
-
-      init(rawValue: String) {
-        self.rawValue = rawValue
-      }
     }
   }
 

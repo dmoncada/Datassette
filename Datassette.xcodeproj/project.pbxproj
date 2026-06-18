@@ -33,28 +33,17 @@
 /* Begin PBXFileReference section */
 		DC0C20CB2FCB4BE800A618E8 /* .editorconfig */ = {isa = PBXFileReference; lastKnownFileType = text; path = .editorconfig; sourceTree = "<group>"; };
 		DC69DAF52FD4EBFB00790EAC /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		DC78E96D2FDE72EB0012B3EA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DC78E9C02FDE77360012B3EA /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		DC794E6A2FBBCDE200EA475F /* Datassette.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Datassette.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC794E792FBBCDE600EA475F /* DatassetteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DatassetteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC794E832FBBCDE600EA475F /* DatassetteUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DatassetteUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCC5967F2FD92DBC0078F41C /* .swift-format */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".swift-format"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		DC203C862FBBFA2400B3C8EA /* Exceptions for "Datassette" folder in "Datassette" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = DC794E692FBBCDE200EA475F /* Datassette */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		DC794E6C2FBBCDE200EA475F /* Datassette */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				DC203C862FBBFA2400B3C8EA /* Exceptions for "Datassette" folder in "Datassette" target */,
-			);
 			path = Datassette;
 			sourceTree = "<group>";
 		};
@@ -103,6 +92,8 @@
 				DC0C20CB2FCB4BE800A618E8 /* .editorconfig */,
 				DCC5967F2FD92DBC0078F41C /* .swift-format */,
 				DC69DAF52FD4EBFB00790EAC /* Makefile */,
+				DC78E9C02FDE77360012B3EA /* README.md */,
+				DC78E96D2FDE72EB0012B3EA /* Info.plist */,
 				DC794E6C2FBBCDE200EA475F /* Datassette */,
 				DC794E7C2FBBCDE600EA475F /* DatassetteTests */,
 				DC794E862FBBCDE600EA475F /* DatassetteUITests */,
@@ -456,7 +447,7 @@
 				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Datassette/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -483,7 +474,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				XROS_DEPLOYMENT_TARGET = 26.2;
 			};
@@ -513,7 +504,7 @@
 				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Datassette/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -540,7 +531,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				XROS_DEPLOYMENT_TARGET = 26.2;
 			};

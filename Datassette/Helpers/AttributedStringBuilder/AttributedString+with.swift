@@ -15,7 +15,9 @@ extension AttributedString {
   func with(_ modifiers: [AttributeModifier]) -> AttributedString {
     var copy = self
     var container = AttributeContainer()
-    modifiers.forEach { $0.apply(to: &container) }
+    for modifier in modifiers {
+      modifier.apply(to: &container)
+    }
     copy.mergeAttributes(container)
     return copy
   }

@@ -1,6 +1,6 @@
-import AVFoundation
-import Foundation
 import MediaPlayer
+
+@preconcurrency typealias TimeObserver = @Sendable (TimeInterval, TimeInterval) -> Void
 
 @MainActor
 private final class PlayerBox {
@@ -13,10 +13,7 @@ struct PlaybackClient {
   var play: () -> Void
   var pause: () -> Void
   var seek: (_ to: TimeInterval) -> Void
-  var addTimeObserver:
-    (
-      _ handler: @escaping (_ current: TimeInterval, _ duration: TimeInterval) -> Void
-    ) -> AnyObject
+  var addTimeObserver: (_ handler: @escaping TimeObserver) -> AnyObject
   var removeObserver: (_ token: AnyObject) -> Void
   var updateNowPlaying:
     (
@@ -29,15 +26,16 @@ struct PlaybackClient {
 }
 
 extension PlaybackClient {
-  static var live: PlaybackClient {
+  static var live: Self = {
     let box = PlayerBox()
 
     #if os(iOS)
-      try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
-      try? AVAudioSession.sharedInstance().setActive(true)
+      let instance = AVAudioSession.sharedInstance()
+      try? instance.setCategory(.playback, mode: .default, options: [])
+      try? instance.setActive(true)
     #endif
 
-    return PlaybackClient(
+    return Self(
       load: { url, startTime in
         let item = AVPlayerItem(url: url)
         let player = AVPlayer(playerItem: item)
@@ -61,8 +59,9 @@ extension PlaybackClient {
           forInterval: CMTime(seconds: 1, preferredTimescale: 1),
           queue: .main
         ) { [weak player] time in
+          guard let player else { return }
           let current = time.seconds
-          let rawDuration = player?.currentItem?.duration.seconds
+          let rawDuration = player.currentItem?.duration.seconds
           let duration = rawDuration.flatMap { $0.isFinite ? $0 : nil } ?? 0
           handler(current, duration)
         } as AnyObject
@@ -84,10 +83,10 @@ extension PlaybackClient {
         box.player = nil
       }
     )
-  }
+  }()
 
-  static var mock: PlaybackClient {
-    PlaybackClient(
+  static var mock =
+    Self(
       load: { _, _ in },
       play: {},
       pause: {},
@@ -97,5 +96,4 @@ extension PlaybackClient {
       updateNowPlaying: { _, _, _, _ in },
       tearDown: {}
     )
-  }
 }

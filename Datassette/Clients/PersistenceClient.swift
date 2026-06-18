@@ -13,10 +13,6 @@ struct PersistenceClient: Sendable {
 
 extension PersistenceClient {
   static var live: Self = {
-    let defaults = UserDefaults.standard
-    let encoder = JSONEncoder()
-    let decoder = JSONDecoder()
-
     enum Keys {
       static let lastEpisodeId = "last_episode_id"
       static let cachedFeed = "cached_feed"
@@ -24,61 +20,56 @@ extension PersistenceClient {
       static let favorites = "favorites"
     }
 
-    func positions() -> [String: TimeInterval] {
-      defaults.dictionary(forKey: Keys.playbackPositions) as? [String: TimeInterval] ?? [:]
+    @Sendable func positions() -> [String: TimeInterval] {
+      UserDefaults.standard.dictionary(forKey: Keys.playbackPositions)
+        as? [String: TimeInterval] ?? [:]
     }
 
     return PersistenceClient(
       savePosition: { id, position in
         var current = positions()
         current[id] = position
-        defaults.set(current, forKey: Keys.playbackPositions)
+        UserDefaults.standard.set(current, forKey: Keys.playbackPositions)
       },
       getPosition: { id in
         positions()[id] ?? 0
       },
       saveLastEpisodeId: { id in
-        defaults.set(id, forKey: Keys.lastEpisodeId)
+        UserDefaults.standard.set(id, forKey: Keys.lastEpisodeId)
       },
       getLastEpisodeId: {
-        defaults.string(forKey: Keys.lastEpisodeId)
+        UserDefaults.standard.string(forKey: Keys.lastEpisodeId)
       },
       saveCachedFeed: { feed in
-        if let data = try? encoder.encode(feed) {
-          defaults.set(data, forKey: Keys.cachedFeed)
+        if let data = try? JSONEncoder().encode(feed) {
+          UserDefaults.standard.set(data, forKey: Keys.cachedFeed)
         }
       },
       getCachedFeed: {
         guard
-          let data = defaults.data(forKey: Keys.cachedFeed),
-          let feed = try? decoder.decode(DatassetteFeed.self, from: data)
+          let data = UserDefaults.standard.data(forKey: Keys.cachedFeed),
+          let feed = try? JSONDecoder().decode(DatassetteFeed.self, from: data)
         else { return nil }
         return feed
       },
       saveFavorites: { favorites in
-        defaults.set(Array(favorites), forKey: Keys.favorites)
+        UserDefaults.standard.set(Array(favorites), forKey: Keys.favorites)
       },
       getFavorites: {
-        Set(defaults.stringArray(forKey: Keys.favorites) ?? [])
+        Set(UserDefaults.standard.stringArray(forKey: Keys.favorites) ?? [])
       }
     )
   }()
 
-  static var mock: Self = {
-    var positions: [String: TimeInterval] = [:]
-    var lastId: String? = nil
-    var cachedFeed: DatassetteFeed? = nil
-    var favorites: Set<String> = []
-
-    return PersistenceClient(
-      savePosition: { id, position in positions[id] = position },
-      getPosition: { id in positions[id] ?? 0 },
-      saveLastEpisodeId: { id in lastId = id },
-      getLastEpisodeId: { lastId },
-      saveCachedFeed: { feed in cachedFeed = feed },
-      getCachedFeed: { cachedFeed },
+  static let mock =
+    Self(
+      savePosition: { _, _ in },
+      getPosition: { _ in 0 },
+      saveLastEpisodeId: { _ in },
+      getLastEpisodeId: { nil },
+      saveCachedFeed: { _ in },
+      getCachedFeed: { nil },
       saveFavorites: { _ in },
       getFavorites: { [] }
     )
-  }()
 }

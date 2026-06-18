@@ -2,9 +2,9 @@ import SwiftUI
 
 #if canImport(AppKit)
   typealias PlatformFont = NSFont
-  #elseif canImport(UIKit)
+#elseif canImport(UIKit)
   typealias PlatformFont = UIFont
-  #endif
+#endif
 
 extension PlatformFont.TextStyle {
   init(_ textStyle: Font.TextStyle) {
@@ -71,18 +71,16 @@ extension Font {
     #endif
   }
 
-  static func custom(_ name: String, _ textStyle: Font.TextStyle) -> Font {
-    .custom(name, size: baseSize(for: textStyle), relativeTo: textStyle)
-  }
-}
-
-extension Font {
   static func themeFont(size: CGFloat) -> Font {
     .custom("IBMPlexMono", size: size)
   }
 
   static func themeFont(_ textStyle: Font.TextStyle) -> Font {
     .custom("IBMPlexMono", textStyle)
+  }
+
+  static func custom(_ name: String, _ textStyle: Font.TextStyle) -> Font {
+    .custom(name, size: baseSize(for: textStyle), relativeTo: textStyle)
   }
 }
 
@@ -139,7 +137,7 @@ extension Font {
       ("semibold", .semibold),
       ("bold", .bold),
       ("heavy", .heavy),
-      ("black", .black),
+      ("black", .black)
     ]
 
     var body: some View {

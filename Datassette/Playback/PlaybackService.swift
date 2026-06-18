@@ -1,4 +1,3 @@
-import Foundation
 import MediaPlayer
 import os
 
@@ -16,22 +15,24 @@ final class PlaybackService {
   var duration: TimeInterval = 0
 
   private let client: PlaybackClient
-  //  private let persistence: PersistenceClient
-  //  private let downloads: DownloadClient
+  // private let persistence: PersistenceClient
+  // private let downloads: DownloadClient
   private let logger = Logger(category: .playbackService)
   private var timeObserverToken: AnyObject?
-  //  private var saveTimer: Timer?
+  // private var saveTimer: Timer?
 
-  //  init(
-  //    client: PlaybackClient = .live,
-  //    persistence: PersistenceClient = .live,
-  //    downloads: DownloadClient = .live
-  //  ) {
-  //    self.client = client
-  //    self.persistence = persistence
-  //    self.downloads = downloads
-  //    setupRemoteCommands()
-  //  }
+  /*
+  init(
+    client: PlaybackClient = .live,
+    persistence: PersistenceClient = .live,
+    downloads: DownloadClient = .live
+  ) {
+    self.client = client
+    self.persistence = persistence
+    self.downloads = downloads
+    setupRemoteCommands()
+  }
+   */
 
   init(client: PlaybackClient? = nil) {
     self.client = client ?? .live
@@ -45,10 +46,12 @@ final class PlaybackService {
   }
 
   func play(_ episode: Episode) {
-    //    if currentEpisode?.id == episode.id {
-    //      if !isPlaying { togglePlayPause() }
-    //      return
-    //    }
+    /*
+    if currentEpisode?.id == episode.id {
+      if !isPlaying { togglePlayPause() }
+      return
+    }
+     */
 
     // Remove observer from old player before loading new episode
     if let token = timeObserverToken {
@@ -58,10 +61,12 @@ final class PlaybackService {
 
     currentEpisode = episode
 
-    //    let savedPosition = persistence.getPosition(episode.id)
-    //    let url = downloads.isDownloaded(episode)
-    //      ? downloads.localURL(episode)
-    //      : episode.enclosureURL
+    /*
+    let savedPosition = persistence.getPosition(episode.id)
+    let url = downloads.isDownloaded(episode)
+      ? downloads.localURL(episode)
+      : episode.enclosureURL
+     */
 
     let savedPosition: Double = 0
     let url = episode.enclosureURL
@@ -71,9 +76,11 @@ final class PlaybackService {
     timeObserverToken = client.addTimeObserver {
       [weak self] current, duration in
       guard let self else { return }
-      self.currentTime = current
-      self.duration = duration
-      self.client.updateNowPlaying(episode, self.isPlaying, current, duration)
+      Task { @MainActor in
+        self.currentTime = current
+        self.duration = duration
+        self.client.updateNowPlaying(episode, self.isPlaying, current, duration)
+      }
     }
 
     client.play()
@@ -125,21 +132,25 @@ final class PlaybackService {
     commandCenter.previousTrackCommand.addTarget { _ in .commandFailed }
   }
 
-  //  private func startPositionSaveTimer() {
-  //    saveTimer?.invalidate()
-  //    saveTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
-  //      MainActor.assumeIsolated {
-  //        guard let self, let episode = self.currentEpisode else { return }
-  //        self.persistence.savePosition(episode.id, self.currentTime)
-  //      }
-  //    }
-  //  }
+  /*
+  private func startPositionSaveTimer() {
+    saveTimer?.invalidate()
+    saveTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
+      MainActor.assumeIsolated {
+        guard let self, let episode = self.currentEpisode else { return }
+        self.persistence.savePosition(episode.id, self.currentTime)
+      }
+    }
+  }
+   */
 
   isolated deinit {
     if let timeObserverToken {
       client.removeObserver(timeObserverToken)
     }
-    //    saveTimer?.invalidate()
+    /*
+    saveTimer?.invalidate()
+     */
     client.tearDown()
   }
 }

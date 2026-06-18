@@ -28,7 +28,7 @@ struct DatassetteEpisodes: View {
       maxHeight: .infinity
     )
     .task {
-      await episodes.loadEpisodes()
+      await episodes.load()
     }
   }
 }
@@ -43,6 +43,6 @@ struct DatassetteEpisodes: View {
   DatassetteEpisodes()
     .padding()
     .background(.themeBackground)
-    .environment(EpisodeService(feedClient: .failing))
+    .environment(EpisodeService(client: .failing))
     .environment(PlaybackService(client: .mock))
 }

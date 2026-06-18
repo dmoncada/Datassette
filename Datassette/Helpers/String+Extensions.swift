@@ -13,7 +13,7 @@ extension String {
   /// brackets so the placeholder stays on the same character grid.
   func placeholder(
     fill: Character = "-",
-    keeping kept: Set<Character> = ["[", "]", ":", " "],
+    keeping kept: Set<Character> = ["[", "]", ":", " "]
   ) -> String {
     String(map { kept.contains($0) ? $0 : fill })
   }
@@ -26,7 +26,7 @@ extension String {
 
     return [
       String(self[..<range.upperBound]),
-      String(self[range.upperBound...]).trimmingCharacters(in: .whitespaces),
+      String(self[range.upperBound...]).trimmingCharacters(in: .whitespaces)
     ]
   }
 }

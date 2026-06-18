@@ -7,17 +7,17 @@ extension Logger.Datassette.Category {
   fileprivate static let feedClient = Self(rawValue: "feedClient")
 }
 
-struct FeedClient: Sendable {
-  var fetchFeed: @Sendable () async throws -> DatassetteFeed
+struct EpisodeClient: Sendable {
+  var fetch: @Sendable () async throws -> DatassetteFeed
 }
 
-extension FeedClient {
-  static var live: Self = {
-    let feedUrl = "https://musicforprogramming.net/rss.xml"
-    let logger = Logger(category: .feedClient)
+extension EpisodeClient {
+  static var live: Self =
+    Self(
+      fetch: {
+        let logger = await Logger(category: .feedClient)
+        let feedUrl = "https://musicforprogramming.net/rss.xml"
 
-    return FeedClient(
-      fetchFeed: {
         do {
           let rss = try await RSSFeed(urlString: feedUrl)
 
@@ -54,53 +54,53 @@ extension FeedClient {
         }
       }
     )
-  }()
 
-  static var mock: Self = {
-    let feed = DatassetteFeed(
-      title: "Music for Programming",
-      description: "Music to help you focus while programming",
-      episodes: [
-        Episode(
-          id: "78",
-          title: "Episode 78: Datassette",
-          publicationDate: Date(),
-          enclosureURL: URL(
-            string: "https://datashat.net/music_for_programming_78-datassette.mp3")!,
-          duration: Duration.seconds(5400),
-          description: nil
-        ),
-        Episode(
-          id: "77",
-          title: "Episode 77: Phonaut",
-          publicationDate: Date(),
-          enclosureURL: URL(string: "https://datashat.net/music_for_programming_77-phonaut.mp3")!,
-          duration: Duration.seconds(7200),
-          description: nil
-        ),
-        Episode(
-          id: "7",
-          title: "Episode 07: Tahlhoff Garten + Untitled",
-          publicationDate: Date(),
-          enclosureURL: URL(
-            string: "https://datashat.net/music_for_programming_7-tahlhoff_garten_and_untitled.mp3")!,
-          duration: Duration.seconds(4019),
-          description: nil
-        ),
-      ],
-      lastUpdated: Date()
-    )
+  static let mock =
+    Self(
+      fetch: {
+        DatassetteFeed(
+          title: "Music for Programming",
+          description: "Music to help you focus while programming",
+          episodes: [
+            Episode(
+              id: "78",
+              title: "Episode 78: Datassette",
+              publicationDate: Date(),
+              enclosureURL: URL(
+                string: "https://datashat.net/music_for_programming_78-datassette.mp3")!,
+              duration: Duration.seconds(5400),
+              description: nil
+            ),
+            Episode(
+              id: "77",
+              title: "Episode 77: Phonaut",
+              publicationDate: Date(),
+              enclosureURL: URL(
+                string: "https://datashat.net/music_for_programming_77-phonaut.mp3")!,
+              duration: Duration.seconds(7200),
+              description: nil
+            ),
+            Episode(
+              id: "7",
+              title: "Episode 07: Tahlhoff Garten + Untitled",
+              publicationDate: Date(),
+              enclosureURL: URL(
+                string:
+                  "https://datashat.net/music_for_programming_7-tahlhoff_garten_and_untitled.mp3")!,
+              duration: Duration.seconds(4019),
+              description: nil
+            )
+          ],
+          lastUpdated: Date()
+        )
+      })
 
-    return FeedClient(fetchFeed: { feed })
-  }()
-
-  static var failing: FeedClient = {
-    FeedClient(
-      fetchFeed: {
+  static let failing =
+    Self(
+      fetch: {
         throw DatassetteFeed.Error.contentUnavailable(
           "Preview: feed unavailable"
         )
       }
     )
-  }()
 }

@@ -12,7 +12,7 @@ struct MockData: PreviewModifier {
     self.initAction = initAction
   }
 
-  @State private var episodes = EpisodeService(feedClient: .mock)
+  @State private var episodes = EpisodeService(client: .mock)
   @State private var playback = PlaybackService(client: .mock)
 
   func body(content: Content, context: Void) -> some View {
@@ -20,10 +20,10 @@ struct MockData: PreviewModifier {
       .task {
         switch initAction {
         case .load:
-          await episodes.loadEpisodes()
+          await episodes.load()
 
         case .loadAndSet:
-          await episodes.loadEpisodes()
+          await episodes.load()
           playback.play(episodes.episodes[0])
           playback.togglePlayPause()
           playback.seek(to: .zero)

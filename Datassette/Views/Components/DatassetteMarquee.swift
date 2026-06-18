@@ -11,7 +11,7 @@ struct DatassetteMarquee: View {
   init(
     _ text: String,
     width: Int = 32,
-    duration: Duration = .seconds(0.5),
+    duration: Duration = .seconds(0.5)
   ) {
     self.text = text
     self.width = width
@@ -52,7 +52,7 @@ struct DatassetteMarquee: View {
     let text =
       first
       ? "Hello, world!"
-      : "This is a much longer marquee text"
+      : "This is a much longer text"
 
     DatassetteMarquee(text, width: 20, duration: .seconds(0.25))
       .font(.themeFont(.body))

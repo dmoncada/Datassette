@@ -34,28 +34,28 @@ final class EpisodeService {
   private(set) var favorites: Set<Episode.ID> = [] {
     didSet {
       if oldValue != favorites {
-        persistence.saveFavorites(favorites)
+        persistenceClient.saveFavorites(favorites)
       }
     }
   }
 
-  private let feedClient: FeedClient
-  private let persistence: PersistenceClient
+  private let episodeClient: EpisodeClient
+  private let persistenceClient: PersistenceClient
 
   init(
-    feedClient: FeedClient? = nil,
-    persistence: PersistenceClient? = nil
+    client: EpisodeClient = .live,
+    persistence: PersistenceClient = .live
   ) {
-    self.feedClient = feedClient ?? .live
-    self.persistence = persistence ?? .live
-    self.favorites = self.persistence.getFavorites()
+    self.episodeClient = client
+    self.persistenceClient = persistence
+    self.favorites = self.persistenceClient.getFavorites()
   }
 
-  func loadEpisodes() async {
+  func load() async {
     state = .loading
 
     do {
-      let feed = try await feedClient.fetchFeed()
+      let feed = try await episodeClient.fetch()
       episodes = feed.episodes
       state = .success
 
