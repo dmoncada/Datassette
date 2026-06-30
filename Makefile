@@ -26,4 +26,4 @@ build:
 		-destination 'generic/platform=iOS Simulator' \
 		| xcbeautify
 
-.PHONY: format build
+.PHONY: check format build
